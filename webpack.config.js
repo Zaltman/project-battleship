@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Preconfigured webpack',
+      title: 'Battleships',
     }),
     // Plugin for hot module replacement
     new webpack.HotModuleReplacementPlugin(),
