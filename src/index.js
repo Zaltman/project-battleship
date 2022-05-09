@@ -80,15 +80,34 @@ function gameBoardFactory() {
       })();
     }
   };
-  let placeShip = function (shipSize, squareIndex, isPlacingHorizontal) {
+  // placingDirrection h for horizontal, v for vertical
+  let placeShip = function (shipSize, squareIndex, placingDirection) {
     let ship = shipFactory(shipSize);
-    if (!isPlacingHorizontal) {
-      for (let i = 0; i < shipSize; i++) {
-        squaresObj.squaresArray[squareIndex + i] = {};
-        squaresObj.squaresArray[squareIndex + i].ship = ship;
-        squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = i;
-      }
+    function shipPlacing(i) {
+      squaresObj.squaresArray[squareIndex + i] = {};
+      squaresObj.squaresArray[squareIndex + i].ship = ship;
+      squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = i;
     }
+    if (placingDirection == 'h') {
+      //check if ship fits
+      if (
+        String(10 + squareIndex).charAt(0) !==
+        String(10 + squareIndex + shipSize - 1).charAt(0)
+      ) {
+        alert('doesnt fit shipPlacing function');
+      }
+      for (let i = 0; i < shipSize; i++) {
+        shipPlacing(i);
+      }
+    } else if (placingDirection == 'v') {
+      if (squareIndex + shipSize * 10 - 9 > 100) {
+        alert('doesnt fit shipPlacing function');
+      }
+
+      for (let i = 0; i < shipSize * 10; i += 10) {
+        shipPlacing(i);
+      }
+    } else alert('something wroing with placeShip function');
   };
   let receiveAttack = function (coord) {
     if (squaresObj.squaresArray[coord]) {
@@ -114,8 +133,8 @@ function gameBoardFactory() {
 }
 let gameBoard = gameBoardFactory();
 gameBoard.createBoard();
-gameBoard.placeShip(3, 0);
-gameBoard.placeShip(1, 5);
+gameBoard.placeShip(3, 79, 'v');
+gameBoard.placeShip(1, 5, 'h');
 gameBoard.receiveAttack(0);
 gameBoard.receiveAttack(1);
 gameBoard.receiveAttack(2);
@@ -126,4 +145,4 @@ gameBoard.receiveAttack(10);
 console.log(squaresObj.squaresArray);
 console.log(gameBoard.checkIfAllSunk());
 
-// gameBoard.checkIfAllSunk();
+gameBoard.checkIfAllSunk();
