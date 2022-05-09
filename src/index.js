@@ -86,7 +86,11 @@ function gameBoardFactory() {
     function shipPlacing(i) {
       squaresObj.squaresArray[squareIndex + i] = {};
       squaresObj.squaresArray[squareIndex + i].ship = ship;
-      squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = i;
+      let x = i;
+      if ((x) => 10) {
+        x /= 10;
+      }
+      squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = x;
     }
     if (placingDirection == 'h') {
       //check if ship fits
