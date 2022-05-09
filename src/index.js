@@ -14,9 +14,9 @@ const shipFactory = (length) => {
   const isSunkProto = {
     isSunk: function isSunk() {
       for (let i = 0; i < this.shipSquares.length; i++) {
-        if (this.shipSquares[i] == false) return 'ship is not sunk';
+        if (this.shipSquares[i] == false) return false;
       }
-      return 'ship has sunk';
+      return true;
     },
   };
   return Object.assign({}, isSunkProto, hitProto, { shipSquares });
@@ -80,32 +80,50 @@ function gameBoardFactory() {
       })();
     }
   };
-  let placeShip = function (shipSize, squareIndex) {
+  let placeShip = function (shipSize, squareIndex, isPlacingHorizontal) {
     let ship = shipFactory(shipSize);
-    for (let i = 0; i < shipSize; i++) {
-      squaresObj.squaresArray[squareIndex + i] = {};
-      squaresObj.squaresArray[squareIndex + i].ship = ship;
-      squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = i;
+    if (!isPlacingHorizontal) {
+      for (let i = 0; i < shipSize; i++) {
+        squaresObj.squaresArray[squareIndex + i] = {};
+        squaresObj.squaresArray[squareIndex + i].ship = ship;
+        squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = i;
+      }
     }
   };
   let receiveAttack = function (coord) {
     if (squaresObj.squaresArray[coord]) {
       let hitIndex = squaresObj.squaresArray[coord].shipSquareHitIndex;
       squaresObj.squaresArray[coord].ship.hit(hitIndex);
-      console.log(squaresObj.squaresArray[coord].ship.isSunk());
     } else {
       squaresObj.squaresArray[coord] = 'missed shot';
     }
   };
-  return { createBoard, placeShip, receiveAttack };
+  let checkIfAllSunk = function () {
+    for (let i = 0; i < squaresObj.squaresArray.length; i++) {
+      if (
+        squaresObj.squaresArray[i] &&
+        squaresObj.squaresArray[i] !== 'missed shot' &&
+        squaresObj.squaresArray[i].ship.isSunk() == false
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+  return { createBoard, placeShip, receiveAttack, checkIfAllSunk };
 }
 let gameBoard = gameBoardFactory();
 gameBoard.createBoard();
 gameBoard.placeShip(3, 0);
-
+gameBoard.placeShip(1, 5);
 gameBoard.receiveAttack(0);
 gameBoard.receiveAttack(1);
 gameBoard.receiveAttack(2);
 gameBoard.receiveAttack(5);
+gameBoard.receiveAttack(19);
+gameBoard.receiveAttack(10);
 
 console.log(squaresObj.squaresArray);
+console.log(gameBoard.checkIfAllSunk());
+
+// gameBoard.checkIfAllSunk();
