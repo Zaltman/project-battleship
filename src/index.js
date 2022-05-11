@@ -23,7 +23,8 @@ const shipFactory = (length) => {
 };
 let shipTest = shipFactory(3);
 const squaresObj = {
-  squaresArray: Array(100),
+  p1SquaresArray: Array(100),
+  p2SquaresArray: Array(100),
 };
 
 function gameBoardFactory() {
@@ -81,16 +82,21 @@ function gameBoardFactory() {
     }
   };
   // placingDirrection h for horizontal, v for vertical
-  let placeShip = function (shipSize, squareIndex, placingDirection) {
+  let placeShip = function (
+    shipSize,
+    squareIndex,
+    placingDirection,
+    playerArray
+  ) {
     let ship = shipFactory(shipSize);
-    function shipPlacing(i) {
-      squaresObj.squaresArray[squareIndex + i] = {};
-      squaresObj.squaresArray[squareIndex + i].ship = ship;
+    function shipPlacing(i, playerArray) {
+      playerArray[squareIndex + i] = {};
+      playerArray[squareIndex + i].ship = ship;
       let x = i;
       if ((x) => 10) {
         x /= 10;
       }
-      squaresObj.squaresArray[squareIndex + i].shipSquareHitIndex = x;
+      playerArray[squareIndex + i].shipSquareHitIndex = x;
     }
     if (placingDirection == 'h') {
       //check if ship fits
@@ -101,7 +107,7 @@ function gameBoardFactory() {
         alert('doesnt fit shipPlacing function');
       }
       for (let i = 0; i < shipSize; i++) {
-        shipPlacing(i);
+        shipPlacing(i, playerArray);
       }
     } else if (placingDirection == 'v') {
       if (squareIndex + shipSize * 10 - 9 > 100) {
@@ -109,24 +115,24 @@ function gameBoardFactory() {
       }
 
       for (let i = 0; i < shipSize * 10; i += 10) {
-        shipPlacing(i);
+        shipPlacing(i, playerArray);
       }
-    } else alert('something wroing with placeShip function');
+    } else alert('something wrong with placeShip function');
   };
-  let receiveAttack = function (coord) {
-    if (squaresObj.squaresArray[coord]) {
-      let hitIndex = squaresObj.squaresArray[coord].shipSquareHitIndex;
-      squaresObj.squaresArray[coord].ship.hit(hitIndex);
-    } else {
-      squaresObj.squaresArray[coord] = 'missed shot';
-    }
+  let receiveAttack = function (coord, playerArray) {
+    if (playerArray[coord] && playerArray[coord] !== 'missed shot') {
+      let hitIndex = playerArray[coord].shipSquareHitIndex;
+      playerArray[coord].ship.hit(hitIndex);
+    } else if (!playerArray[coord]) {
+      playerArray[coord] = 'missed shot';
+    } else alert('receiveAttack function, already shot or something else');
   };
-  let checkIfAllSunk = function () {
-    for (let i = 0; i < squaresObj.squaresArray.length; i++) {
+  let checkIfAllSunk = function (playerArray) {
+    for (let i = 0; i < playerArray.length; i++) {
       if (
-        squaresObj.squaresArray[i] &&
-        squaresObj.squaresArray[i] !== 'missed shot' &&
-        squaresObj.squaresArray[i].ship.isSunk() == false
+        playerArray[i] &&
+        playerArray[i] !== 'missed shot' &&
+        playerArray[i].ship.isSunk() == false
       ) {
         return false;
       }
@@ -137,16 +143,19 @@ function gameBoardFactory() {
 }
 let gameBoard = gameBoardFactory();
 gameBoard.createBoard();
-gameBoard.placeShip(3, 79, 'v');
-gameBoard.placeShip(1, 5, 'h');
-gameBoard.receiveAttack(0);
-gameBoard.receiveAttack(1);
-gameBoard.receiveAttack(2);
-gameBoard.receiveAttack(5);
-gameBoard.receiveAttack(19);
-gameBoard.receiveAttack(10);
+gameBoard.placeShip(3, 79, 'v', squaresObj.p2SquaresArray);
+// gameBoard.placeShip(1, 5, 'h', squaresObj.p1SquaresArray);
+// gameBoard.receiveAttack(0, squaresObj.p1SquaresArray);
 
-console.log(squaresObj.squaresArray);
-console.log(gameBoard.checkIfAllSunk());
+// gameBoard.receiveAttack(1, squaresObj.p1SquaresArray);
 
-gameBoard.checkIfAllSunk();
+// gameBoard.receiveAttack(2, squaresObj.p1SquaresArray);
+// gameBoard.receiveAttack(5, squaresObj.p1SquaresArray);
+// gameBoard.receiveAttack(19, squaresObj.p1SquaresArray);
+// gameBoard.receiveAttack(19, squaresObj.p1SquaresArray);
+
+console.log(squaresObj.p2SquaresArray);
+// console.log(gameBoard.checkIfAllSunk(squaresObj.p1SquaresArray));
+console.log(gameBoard.checkIfAllSunk(squaresObj.p2SquaresArray));
+
+// gameBoard.checkIfAllSunk(squaresObj.p1SquaresArray);
