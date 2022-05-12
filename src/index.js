@@ -102,20 +102,36 @@ function gameBoardFactory() {
     let ablePlaceShipCheck = function (
       shipSize,
       playerArray,
-      placeWhichSquareIndex
+      placeWhichSquareIndex,
+      placingDirection
     ) {
       let isSquareTaken = false;
-      for (let i = 0; i < shipSize; i++) {
-        console.log(playerArray[placeWhichSquareIndex + i]);
-        if (playerArray[placeWhichSquareIndex + i]) {
-          isSquareTaken = true;
+      if (placingDirection == 'h') {
+        for (let i = 0; i < shipSize; i++) {
+          if (playerArray[placeWhichSquareIndex + i]) {
+            isSquareTaken = true;
+          }
+        }
+      } else if (placingDirection == 'v') {
+        for (let i = 0; i < shipSize * 10; i += 10) {
+          console.log([placeWhichSquareIndex + i]);
+          if (playerArray[placeWhichSquareIndex + i]) {
+            isSquareTaken = true;
+          }
         }
       }
       if (!isSquareTaken) return true;
       else return false;
     };
     function placingHorizontaly() {
-      if (!ablePlaceShipCheck(shipSize, playerArray, placeWhichSquareIndex)) {
+      if (
+        !ablePlaceShipCheck(
+          shipSize,
+          playerArray,
+          placeWhichSquareIndex,
+          placingDirection
+        )
+      ) {
         return alert(
           'target area is taken by other ship, ablePlaceShipCheck function'
         );
@@ -132,6 +148,18 @@ function gameBoardFactory() {
       }
     }
     function placingVerticaly() {
+      if (
+        !ablePlaceShipCheck(
+          shipSize,
+          playerArray,
+          placeWhichSquareIndex,
+          placingDirection
+        )
+      ) {
+        return alert(
+          'target area is taken by other ship, ablePlaceShipCheck function'
+        );
+      }
       if (placeWhichSquareIndex + shipSize * 10 - 9 > 100) {
         return alert('doesnt fit shipPlacing function');
       }
@@ -182,8 +210,10 @@ const playerFactory = (playerArray) => {
 };
 let gameBoard = gameBoardFactory();
 gameBoard.createBoard();
-gameBoard.placeShip(3, 0, 'h', squaresObj.p1SquaresArray);
-gameBoard.placeShip(1, 3, 'h', squaresObj.p1SquaresArray);
+gameBoard.placeShip(3, 0, 'v', squaresObj.p1SquaresArray);
+gameBoard.placeShip(1, 30, 'v', squaresObj.p1SquaresArray);
+
+// gameBoard.placeShip(1, 2, 'h', squaresObj.p1SquaresArray);
 // gameBoard.receiveAttack(0, squaresObj.p1SquaresArray);
 
 // gameBoard.receiveAttack(1, squaresObj.p1SquaresArray);
