@@ -111,10 +111,11 @@ function gameBoardFactory() {
         isSquareTaken = true;
       }
     }
-    console.log(isSquareTaken);
+    // console.log(isSquareTaken);
     if (isSquareTaken == false) return true;
     else {
-      alert('ablePlaceShipCheck false');
+      // alert('ablePlaceShipCheck false');
+      console.log('unable to place');
       return false;
     }
   };
@@ -129,6 +130,12 @@ function gameBoardFactory() {
     function shipPlacing(i, playerArray) {
       playerArray[placeWhichSquareIndex + i] = {};
       playerArray[placeWhichSquareIndex + i].ship = ship;
+      //put placing restriction zone around, not working
+      // playerArray[placeWhichSquareIndex + i + 1] = {};
+      // playerArray[placeWhichSquareIndex + i - 1] = {};
+      // playerArray[placeWhichSquareIndex + i - 10] = {};
+      // playerArray[placeWhichSquareIndex + i + 10] = {};
+
       let x = i;
       if (x >= 10) {
         x /= 10;
@@ -137,32 +144,11 @@ function gameBoardFactory() {
       playerArray[placeWhichSquareIndex + i].shipSquareHitIndex = x;
     }
     function placingHorizontaly() {
-      // if (
-      //   !ablePlaceShipCheck(
-      //     shipSize,
-      //     playerArray,
-      //     placeWhichSquareIndex,
-      //     placingDirection
-      //   )
-      // ) {
-      //   return false;
-      // }
       for (let i = 0; i < shipSize; i++) {
         shipPlacing(i, playerArray);
       }
     }
     function placingVerticaly() {
-      // if (
-      //   !ablePlaceShipCheck(
-      //     shipSize,
-      //     playerArray,
-      //     placeWhichSquareIndex,
-      //     placingDirection
-      //   )
-      // ) {
-      //   return false;
-      // }
-
       for (let i = 0; i < shipSize * 10; i += 10) {
         shipPlacing(i, playerArray);
       }
@@ -201,7 +187,7 @@ function gameBoardFactory() {
     ablePlaceShipCheck,
   };
 }
-const computerShipPopulate = () => {
+const computerShipsPopulate = (playerArray) => {
   function randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -213,59 +199,37 @@ const computerShipPopulate = () => {
     } else if (decidingInt == 1) return 'h';
     else return alert('somethings wrong with chooseDirection function');
   }
-  function placeAiShip() {
-    let coord = randomIntFromInterval(0, 100);
-    let direction = chooseDirection();
-    console.log(direction);
-    //checks if is able to place
-    let isAbleToPLace = gameBoard.ablePlaceShipCheck(
-      3,
-      coord,
-      direction,
-      squaresObj.p2SquaresArray
-    );
-    console.log(isAbleToPLace);
-    if (
-      gameBoard.ablePlaceShipCheck(
-        3,
-        coord,
-        direction,
-        squaresObj.p2SquaresArray
-      ) == true
-    ) {
-      console.log('works');
-      return gameBoard.placeShip(
-        3,
-        coord,
-        direction,
-        squaresObj.p2SquaresArray
-      );
-    } else {
-      console.log('didnt work');
-      placeAiShip();
+  function placeAiShip(playerArray) {
+    // let size = size;
+    function placingAttempt(size, playerArray) {
+      let coord = randomIntFromInterval(0, 100);
+      let direction = chooseDirection();
+      if (gameBoard.ablePlaceShipCheck(size, coord, direction, playerArray)) {
+        gameBoard.placeShip(size, coord, direction, playerArray);
+      } else placingAttempt(size, playerArray);
     }
+    placingAttempt(1, playerArray);
+    placingAttempt(1, playerArray);
+    placingAttempt(2, playerArray);
+    placingAttempt(2, playerArray);
+    placingAttempt(3, playerArray);
+    placingAttempt(3, playerArray);
+    placingAttempt(4, playerArray);
+    placingAttempt(5, playerArray);
   }
-  placeAiShip();
+  placeAiShip(playerArray);
 };
-//computer ship list
-//1, shipCoord, direction, squaresObj.p2SquaresArray
-//1, shipCoord, direction, squaresObj.p2SquaresArray
-//1, shipCoord, direction, squaresObj.p2SquaresArray
-//1, shipCoord, direction, squaresObj.p2SquaresArray
-//2, shipCoord, direction, squaresObj.p2SquaresArray
-//2, shipCoord, direction, squaresObj.p2SquaresArray
-//2, shipCoord, direction, squaresObj.p2SquaresArray
-//3, shipCoord, direction, squaresObj.p2SquaresArray
-//3, shipCoord, direction, squaresObj.p2SquaresArray
-//4, shipCoord, direction, squaresObj.p2SquaresArray
 
 // const playerFactory = (playerArray) => {};
 let gameBoard = gameBoardFactory();
 gameBoard.createBoard();
-gameBoard.placeShip(3, 78, 'v', squaresObj.p2SquaresArray);
-console.log(
-  gameBoard.ablePlaceShipCheck(3, 79, 'v', squaresObj.p2SquaresArray)
-);
+computerShipsPopulate(squaresObj.p2SquaresArray);
+// gameBoard.placeShip(3, 95, 'h', squaresObj.p2SquaresArray);
+
+// console.log(
+//   gameBoard.ablePlaceShipCheck(3, 97, 'h', squaresObj.p2SquaresArray)
+// );
+// gameBoard.placeShip(3, 97, 'h', squaresObj.p2SquaresArray);
 // computerShipPopulate();
 // gameBoard.placeShip(3, 0, 'v', squaresObj.p1SquaresArray);
 // gameBoard.placeShip(1, 30, 'v', squaresObj.p1SquaresArray);
