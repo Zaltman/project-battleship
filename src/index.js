@@ -8,7 +8,8 @@ const shipFactory = (length) => {
   }
   const hitProto = {
     hit: function hit(hitSquareIndex) {
-      this.shipSquares[hitSquareIndex] = true;
+      let targetSquare = hitSquareIndex;
+      this.shipSquares[targetSquare] = true;
     },
   };
   const isSunkProto = {
@@ -21,7 +22,6 @@ const shipFactory = (length) => {
   };
   return Object.assign({}, isSunkProto, hitProto, { shipSquares });
 };
-let shipTest = shipFactory(3);
 const squaresObj = {
   p1SquaresArray: Array(100),
   p2SquaresArray: Array(100),
@@ -111,7 +111,6 @@ function gameBoardFactory() {
         isSquareTaken = true;
       }
     }
-    // console.log(isSquareTaken);
     if (isSquareTaken == false) return true;
     else {
       // alert('ablePlaceShipCheck false');
@@ -119,7 +118,7 @@ function gameBoardFactory() {
       return false;
     }
   };
-  // placingDirrection h for horizontal, v for vertical
+  // placingDirrection 'h' for horizontal, 'v' for vertical
   let placeShip = function (
     shipSize,
     placeWhichSquareIndex,
@@ -130,17 +129,10 @@ function gameBoardFactory() {
     function shipPlacing(i, playerArray) {
       playerArray[placeWhichSquareIndex + i] = {};
       playerArray[placeWhichSquareIndex + i].ship = ship;
-      //put placing restriction zone around, not working
-      // playerArray[placeWhichSquareIndex + i + 1] = {};
-      // playerArray[placeWhichSquareIndex + i - 1] = {};
-      // playerArray[placeWhichSquareIndex + i - 10] = {};
-      // playerArray[placeWhichSquareIndex + i + 10] = {};
-
       let x = i;
       if (x >= 10) {
         x /= 10;
       }
-
       playerArray[placeWhichSquareIndex + i].shipSquareHitIndex = x;
     }
     function placingHorizontaly() {
@@ -160,12 +152,21 @@ function gameBoardFactory() {
     } else alert('something wrong with placeShip function');
   };
   let receiveAttack = function (coord, playerArray) {
-    if (playerArray[coord] && playerArray[coord] !== 'missed shot') {
+    console.log(playerArray);
+    if (
+      playerArray[coord] &&
+      playerArray[coord] !== 'missed shot' &&
+      playerArray[coord].ship &&
+      playerArray[coord].ship.shipSquares[
+        playerArray[coord].shipSquareHitIndex
+      ] == false
+    ) {
       let hitIndex = playerArray[coord].shipSquareHitIndex;
       playerArray[coord].ship.hit(hitIndex);
     } else if (!playerArray[coord]) {
       playerArray[coord] = 'missed shot';
-    } else alert('receiveAttack function, already shot or something else');
+      //if unable to shoot, return false
+    } else return false;
   };
   let checkIfAllSunk = function (playerArray) {
     for (let i = 0; i < playerArray.length; i++) {
@@ -187,7 +188,7 @@ function gameBoardFactory() {
     ablePlaceShipCheck,
   };
 }
-const computerShipsPopulate = (playerArray) => {
+function computerActionsFactory(playerArray) {
   function randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -199,8 +200,7 @@ const computerShipsPopulate = (playerArray) => {
     } else if (decidingInt == 1) return 'h';
     else return alert('somethings wrong with chooseDirection function');
   }
-  function placeAiShip(playerArray) {
-    // let size = size;
+  function populateShips(playerArray) {
     function placingAttempt(size, playerArray) {
       let coord = randomIntFromInterval(0, 100);
       let direction = chooseDirection();
@@ -208,6 +208,8 @@ const computerShipsPopulate = (playerArray) => {
         gameBoard.placeShip(size, coord, direction, playerArray);
       } else placingAttempt(size, playerArray);
     }
+
+    //populating every ship on board
     placingAttempt(1, playerArray);
     placingAttempt(1, playerArray);
     placingAttempt(2, playerArray);
@@ -217,14 +219,43 @@ const computerShipsPopulate = (playerArray) => {
     placingAttempt(4, playerArray);
     placingAttempt(5, playerArray);
   }
-  placeAiShip(playerArray);
-};
+
+  function randomShot(targetPlayerArray) {
+    let coord = randomIntFromInterval(0, 100);
+    if (gameBoard.receiveAttack(coord, targetPlayerArray) == false) {
+      return randomShot(targetPlayerArray);
+    }
+    // if (targetPlayerArray[coord]) {
+    //   let targetSquareIndex = targetPlayerArray[coord].shipSquareHitIndex;
+    //   targetPlayerArray[coord].ship.hit(targetSquareIndex);
+    //   console.log('shot!');
+    // }
+  }
+
+  return { populateShips, randomShot };
+}
 
 // const playerFactory = (playerArray) => {};
 let gameBoard = gameBoardFactory();
+let AiController = computerActionsFactory();
 gameBoard.createBoard();
-computerShipsPopulate(squaresObj.p2SquaresArray);
-// gameBoard.placeShip(3, 95, 'h', squaresObj.p2SquaresArray);
+AiController.populateShips(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+// shoots own ships for testing
+
+// computerActions.placeAiShip(squaresObj.p2SquaresArray);
+// gameBoard.placeShip(3, 0, 'h', squaresObj.p2SquaresArray);
+// squaresObj.p2SquaresArray[0].ship.hit(
+//   squaresObj.p2SquaresArray[0].shipSquareHitIndex
+// );
+// console.log(squaresObj.p2SquaresArray[0]);
+
+// console.log(squaresObj.p2SquaresArray[0].shipSquareHitIndex);
+// console.log(squaresObj.p2SquaresArray[1]);
+// console.log(squaresObj.p2SquaresArray[1].shipSquareHitIndex);
+
+// console.log(squaresObj.p2SquaresArray[2]);
+// console.log(squaresObj.p2SquaresArray[2].shipSquareHitIndex);
 
 // console.log(
 //   gameBoard.ablePlaceShipCheck(3, 97, 'h', squaresObj.p2SquaresArray)
