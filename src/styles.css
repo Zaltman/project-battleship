@@ -12,11 +12,15 @@ body {
   height: 100%;
   width: 100%;
   display: flex;
+  flex-direction: column-reverse;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
 }
-#mainContainer {
+#gameState {
+}
+
+#boardContainer {
   display: flex;
   /* justify-content: flex-end; */
   /* align-items: flex-end; */
@@ -94,4 +98,13 @@ body {
   /* flex-grow: 1; */
   border-top: solid 1px black;
   border-left: solid 1px black;
+}
+
+.shipSquare {
+  background-color: blue;
+  /* border-left: solid 2px blue; */
+}
+
+.shotSquare {
+  background-color: red;
 }

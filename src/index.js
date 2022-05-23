@@ -28,9 +28,9 @@ const squaresObj = {
 };
 
 function gameBoardFactory() {
-  let mainContainer = document.createElement('div');
-  mainContainer.setAttribute('id', 'mainContainer');
-  document.querySelector('body').appendChild(mainContainer);
+  let boardContainer = document.createElement('div');
+  boardContainer.setAttribute('id', 'boardContainer');
+  document.querySelector('body').appendChild(boardContainer);
   let createBoard = function () {
     for (let i = 0; i < 2; i++) {
       let whichPlayer;
@@ -42,7 +42,7 @@ function gameBoardFactory() {
         playerContainer.setAttribute('id', 'p2Container');
         whichPlayer = 'player2';
       }
-      mainContainer.appendChild(playerContainer);
+      boardContainer.appendChild(playerContainer);
       (function cordinateColumnF() {
         let coordinateColumn = document.createElement('div');
         coordinateColumn.classList.add('coordinateColumn');
@@ -114,7 +114,7 @@ function gameBoardFactory() {
     if (isSquareTaken == false) return true;
     else {
       // alert('ablePlaceShipCheck false');
-      console.log('unable to place');
+      // console.log('unable to place');
       return false;
     }
   };
@@ -152,7 +152,7 @@ function gameBoardFactory() {
     } else alert('something wrong with placeShip function');
   };
   let receiveAttack = function (coord, playerArray) {
-    console.log(playerArray);
+    // console.log(playerArray);
     if (
       playerArray[coord] &&
       playerArray[coord] !== 'missed shot' &&
@@ -235,48 +235,61 @@ function computerActionsFactory(playerArray) {
   return { populateShips, randomShot };
 }
 
+function dom() {
+  let body = document.querySelector('body');
+  function addGameStateContainer() {
+    let gameStateContainer = document.createElement('div');
+    gameStateContainer.textContent = 'Game state placeholder';
+    gameStateContainer.setAttribute('id', 'gameState');
+    body.appendChild(gameStateContainer);
+  }
+  function renderShips(playerArray, whichBoard) {
+    if (whichBoard == 1) {
+      let squareContainer = document.querySelector('#p1Container');
+      colorizeShips(squareContainer);
+    } else if (whichBoard == 2) {
+      let squareContainer = document.querySelector('#p2Container');
+      colorizeShips(squareContainer);
+    } else alert('provide whichBoard to domController.renderShips function');
+
+    function colorizeShips(squareContainer) {
+      for (let i = 0; i < playerArray.length; i++) {
+        let domSquare = squareContainer.querySelector(`[squareid="${i}"]`);
+        if (playerArray[i]) {
+          domSquare.classList.add('shipSquare');
+          console.log(playerArray[i]);
+          if (
+            playerArray[i].ship &&
+            playerArray[i].ship.shipSquares[
+              playerArray[i].shipSquareHitIndex
+            ] == true
+          ) {
+            domSquare.classList.add('shotSquare');
+          }
+        }
+      }
+    }
+  }
+  return { addGameStateContainer, renderShips };
+}
+
 // const playerFactory = (playerArray) => {};
 let gameBoard = gameBoardFactory();
 let AiController = computerActionsFactory();
+let domController = dom();
 gameBoard.createBoard();
-AiController.populateShips(squaresObj.p2SquaresArray);
-AiController.randomShot(squaresObj.p2SquaresArray);
+domController.addGameStateContainer();
+AiController.populateShips(squaresObj.p1SquaresArray);
+AiController.randomShot(squaresObj.p1SquaresArray);
+AiController.randomShot(squaresObj.p1SquaresArray);
+AiController.randomShot(squaresObj.p1SquaresArray);
+AiController.randomShot(squaresObj.p1SquaresArray);
+AiController.randomShot(squaresObj.p1SquaresArray);
+AiController.randomShot(squaresObj.p1SquaresArray);
+
+domController.renderShips(squaresObj.p1SquaresArray, 1);
+// AiController.populateShips(squaresObj.p2SquaresArray);
+// domController.renderShips(squaresObj.p2SquaresArray, 2);
+
 // shoots own ships for testing
-
-// computerActions.placeAiShip(squaresObj.p2SquaresArray);
-// gameBoard.placeShip(3, 0, 'h', squaresObj.p2SquaresArray);
-// squaresObj.p2SquaresArray[0].ship.hit(
-//   squaresObj.p2SquaresArray[0].shipSquareHitIndex
-// );
-// console.log(squaresObj.p2SquaresArray[0]);
-
-// console.log(squaresObj.p2SquaresArray[0].shipSquareHitIndex);
-// console.log(squaresObj.p2SquaresArray[1]);
-// console.log(squaresObj.p2SquaresArray[1].shipSquareHitIndex);
-
-// console.log(squaresObj.p2SquaresArray[2]);
-// console.log(squaresObj.p2SquaresArray[2].shipSquareHitIndex);
-
-// console.log(
-//   gameBoard.ablePlaceShipCheck(3, 97, 'h', squaresObj.p2SquaresArray)
-// );
-// gameBoard.placeShip(3, 97, 'h', squaresObj.p2SquaresArray);
-// computerShipPopulate();
-// gameBoard.placeShip(3, 0, 'v', squaresObj.p1SquaresArray);
-// gameBoard.placeShip(1, 30, 'v', squaresObj.p1SquaresArray);
-
-// gameBoard.placeShip(1, 2, 'h', squaresObj.p1SquaresArray);
-// gameBoard.receiveAttack(0, squaresObj.p1SquaresArray);
-
-// gameBoard.receiveAttack(1, squaresObj.p1SquaresArray);
-
-// gameBoard.receiveAttack(2, squaresObj.p1SquaresArray);
-// gameBoard.receiveAttack(5, squaresObj.p1SquaresArray);
-// gameBoard.receiveAttack(19, squaresObj.p1SquaresArray);
-// gameBoard.receiveAttack(19, squaresObj.p1SquaresArray);
-
-console.log(squaresObj.p2SquaresArray);
-// console.log(gameBoard.checkIfAllSunk(squaresObj.p1SquaresArray));
-// console.log(gameBoard.checkIfAllSunk(squaresObj.p2SquaresArray));
-
-// gameBoard.checkIfAllSunk(squaresObj.p1SquaresArray);
+console.log(squaresObj.p1SquaresArray);
