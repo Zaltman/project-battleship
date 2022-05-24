@@ -78,11 +78,48 @@ function gameBoardFactory() {
           boardSquare.classList.add('boardSquare');
           boardSquare.classList.add(whichPlayer);
           boardSquare.setAttribute('squareIndex', i);
+          boardSquare.addEventListener('click', eListenerTakeShot);
           shipSquaresContainer.appendChild(boardSquare);
         }
       })();
     }
   };
+  function eListenerTakeShot(e) {
+    if (
+      e.target.classList.value.includes('missedShot') ||
+      e.target.classList.value.includes('shotSquare')
+    ) {
+      return alert('already shot there');
+    }
+    // console.log(e.target.classList);
+    let squareIndex = e.target.getAttribute('squareindex');
+    let playerIndex = e.target.classList[1];
+    if (playerIndex == 'player1') {
+      receiveAttack(squareIndex, squaresObj.p1SquaresArray);
+      AiController.randomShot(squaresObj.p2SquaresArray);
+    } else if (playerIndex == 'player2') {
+      receiveAttack(squareIndex, squaresObj.p2SquaresArray);
+      AiController.randomShot(squaresObj.p1SquaresArray);
+    }
+    console.log(e.target);
+    // console.log(playerIndex);
+    // console.log(squareIndex);
+    // receiveAttack(squareIndex, p);
+    domController.renderShips(squaresObj.p1SquaresArray, 1);
+    domController.renderShips(squaresObj.p2SquaresArray, 2);
+    if (checkIfAllSunk(squaresObj.p2SquaresArray) == true) {
+      alert('player1 has won!!!');
+    }
+    if (checkIfAllSunk(squaresObj.p1SquaresArray) == true) {
+      alert('computer has won! :(');
+    }
+
+    console.log(checkIfAllSunk(squaresObj.p2SquaresArray));
+    console.log(checkIfAllSunk(squaresObj.p1SquaresArray));
+
+    // console.log({ playerNumber });
+  }
+
   let ablePlaceShipCheck = function (
     shipSize,
     placeWhichSquareIndex,
@@ -115,7 +152,6 @@ function gameBoardFactory() {
     }
     if (isSquareTaken == false) return true;
     else {
-      // alert('ablePlaceShipCheck false');
       // console.log('unable to place');
       return false;
     }
@@ -223,7 +259,7 @@ function computerActionsFactory(playerArray) {
   }
 
   function randomShot(targetPlayerArray) {
-    let coord = randomIntFromInterval(0, 100);
+    let coord = randomIntFromInterval(0, 99);
     if (gameBoard.receiveAttack(coord, targetPlayerArray) == false) {
       return randomShot(targetPlayerArray);
     }
@@ -255,22 +291,21 @@ function dom() {
     } else alert('provide whichBoard to domController.renderShips function');
 
     function colorizeShips(squareContainer) {
-      for (let i = 0; i < playerArray.length - 1; i++) {
+      for (let i = 0; i < playerArray.length; i++) {
         let domSquare = squareContainer.querySelector(`[squareIndex="${i}"]`);
-        if (playerArray[i]) {
+        if (playerArray[i] && playerArray[i] !== 'missed shot') {
           domSquare.classList.add('shipSquare');
-          console.log(playerArray[i]);
-          if (
-            playerArray[i].ship &&
-            playerArray[i].ship.shipSquares[
-              playerArray[i].shipSquareHitIndex
-            ] == true
-          ) {
-            console.log('ain');
-            domSquare.classList.add('shotSquare');
-          } else if (playerArray[i] == 'missed shot') {
-            domSquare.classList.add('missedShot');
-          }
+          // console.log(playerArray[i]);
+        }
+        if (
+          playerArray[i] &&
+          playerArray[i].ship &&
+          playerArray[i].ship.shipSquares[playerArray[i].shipSquareHitIndex] ==
+            true
+        ) {
+          domSquare.classList.add('shotSquare');
+        } else if (playerArray[i] == 'missed shot') {
+          domSquare.classList.add('missedShot');
         }
       }
     }
