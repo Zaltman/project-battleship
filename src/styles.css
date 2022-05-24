@@ -108,3 +108,7 @@ body {
 .shotSquare {
   background-color: red;
 }
+
+.missedShot {
+  background-color: gray;
+}

@@ -264,7 +264,10 @@ function dom() {
               playerArray[i].shipSquareHitIndex
             ] == true
           ) {
+            console.log('ain');
             domSquare.classList.add('shotSquare');
+          } else if (playerArray[i] == 'missed shot') {
+            domSquare.classList.add('missedShot');
           }
         }
       }
@@ -287,7 +290,17 @@ AiController.randomShot(squaresObj.p1SquaresArray);
 AiController.randomShot(squaresObj.p1SquaresArray);
 AiController.randomShot(squaresObj.p1SquaresArray);
 
+AiController.populateShips(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+AiController.randomShot(squaresObj.p2SquaresArray);
+
 domController.renderShips(squaresObj.p1SquaresArray, 1);
+domController.renderShips(squaresObj.p2SquaresArray, 2);
+
 // AiController.populateShips(squaresObj.p2SquaresArray);
 // domController.renderShips(squaresObj.p2SquaresArray, 2);
 
