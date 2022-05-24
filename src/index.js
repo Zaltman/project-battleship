@@ -29,8 +29,10 @@ const squaresObj = {
 
 function gameBoardFactory() {
   let boardContainer = document.createElement('div');
+  let body = document.querySelector('body');
+
   boardContainer.setAttribute('id', 'boardContainer');
-  document.querySelector('body').appendChild(boardContainer);
+  body.appendChild(boardContainer);
   let createBoard = function () {
     for (let i = 0; i < 2; i++) {
       let whichPlayer;
@@ -75,7 +77,7 @@ function gameBoardFactory() {
           let boardSquare = document.createElement('div');
           boardSquare.classList.add('boardSquare');
           boardSquare.classList.add(whichPlayer);
-          boardSquare.setAttribute('squareId', i);
+          boardSquare.setAttribute('squareIndex', i);
           shipSquaresContainer.appendChild(boardSquare);
         }
       })();
@@ -253,8 +255,8 @@ function dom() {
     } else alert('provide whichBoard to domController.renderShips function');
 
     function colorizeShips(squareContainer) {
-      for (let i = 0; i < playerArray.length; i++) {
-        let domSquare = squareContainer.querySelector(`[squareid="${i}"]`);
+      for (let i = 0; i < playerArray.length - 1; i++) {
+        let domSquare = squareContainer.querySelector(`[squareIndex="${i}"]`);
         if (playerArray[i]) {
           domSquare.classList.add('shipSquare');
           console.log(playerArray[i]);
