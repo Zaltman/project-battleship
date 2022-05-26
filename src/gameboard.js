@@ -1,4 +1,8 @@
 import { shipFactory } from './shipfactory';
+import { squaresObj } from '.';
+import { AiController } from '.';
+import { domController } from '.';
+
 function gameBoardFactory() {
   let boardContainer = document.createElement('div');
   let body = document.querySelector('body');
@@ -51,19 +55,25 @@ function gameBoardFactory() {
           boardSquare.classList.add(whichPlayer);
           boardSquare.setAttribute('squareIndex', i);
           if (whichPlayer == 'player2') {
-            boardSquare.addEventListener('click', eListenerTakeShot);
+            boardSquare.addEventListener('click', eListenerTakeShotInteraction);
+            boardSquare.classList.add('invisible');
           }
           shipSquaresContainer.appendChild(boardSquare);
         }
       })();
     }
   };
-  function eListenerTakeShot(e) {
+  //includes gamestate text changing
+  function eListenerTakeShotInteraction(e) {
+    if (isGameOver()) {
+      return alert('game over');
+    }
     if (
       e.target.classList.value.includes('missedShot') ||
       e.target.classList.value.includes('shotSquare')
     ) {
-      return alert('already shot there');
+      return domController.changeGameStateStr('Already shot there');
+      // alert('already shot there');
     }
     let squareIndex = e.target.getAttribute('squareindex');
     let playerIndex = e.target.classList[1];
@@ -76,11 +86,22 @@ function gameBoardFactory() {
     }
     domController.renderShips(squaresObj.p1SquaresArray, 1);
     domController.renderShips(squaresObj.p2SquaresArray, 2);
-    if (checkIfAllSunk(squaresObj.p2SquaresArray) == true) {
-      alert('player1 has won!!!');
+    domController.changeGameStateStr('Missed shot');
+    if (e.target.classList.value.includes('shipSquare')) {
+      domController.changeGameStateStr('Hit!');
     }
-    if (checkIfAllSunk(squaresObj.p1SquaresArray) == true) {
-      alert('computer has won! :(');
+    isGameOver();
+    function isGameOver() {
+      if (checkIfAllSunk(squaresObj.p2SquaresArray) == true) {
+        alert('player1 has won!!!');
+        domController.changeGameStateStr('player1 has won!!!');
+        return true;
+      }
+      if (checkIfAllSunk(squaresObj.p1SquaresArray) == true) {
+        alert('computer has won! :(');
+        domController.changeGameStateStr('computer has won! :(');
+        return true;
+      }
     }
   }
 
@@ -164,6 +185,7 @@ function gameBoardFactory() {
     ) {
       let hitIndex = playerArray[coord].shipSquareHitIndex;
       playerArray[coord].ship.hit(hitIndex);
+      // console.log(playerIndex);
     } else if (!playerArray[coord]) {
       playerArray[coord] = 'missed shot';
       //if unable to shoot, return false
