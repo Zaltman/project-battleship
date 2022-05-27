@@ -54,6 +54,7 @@ function gameBoardFactory() {
           boardSquare.classList.add('boardSquare');
           boardSquare.classList.add(whichPlayer);
           boardSquare.setAttribute('squareIndex', i);
+          boardSquare.setAttribute('draggable', 'true');
           if (whichPlayer == 'player2') {
             boardSquare.addEventListener('click', eListenerTakeShotInteraction);
             boardSquare.classList.add('invisible');

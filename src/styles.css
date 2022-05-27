@@ -110,6 +110,13 @@ body {
   background-color: blue;
   /* border-left: solid 2px blue; */
 }
+.boardSquare.over {
+  border: 3px dotted #666;
+}
+
+.shipSquare.over {
+  background-color: red;
+}
 
 .shotSquare {
   background-color: red;
@@ -117,4 +124,22 @@ body {
 
 .missedShot {
   background-color: gray;
+}
+
+.invisible {
+  background-color: white;
+}
+
+.missedShot.invisible {
+  background-color: grey;
+}
+
+.shotSquare.invisible {
+  background-color: red;
+}
+
+.draggableShip {
+  background-color: blue;
+  height: 29px;
+  width: 29px;
 }
