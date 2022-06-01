@@ -12,7 +12,7 @@ body {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
@@ -37,6 +37,7 @@ body {
   width: 330px;
   height: 330px;
   margin: 50px;
+  margin-top: 15px;
   flex-wrap: wrap;
   box-shadow: 1px 1px 0px 0px black;
 }
@@ -138,8 +139,34 @@ body {
   background-color: red;
 }
 
+#directionBtn {
+  background-color: lightblue;
+  border-radius: 5px;
+  height: 40px;
+  width: 40px;
+  font-size: xx-large;
+}
+
+.shipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 860px;
+  margin-right: 150px;
+  padding-left: 150px;
+  padding-right: 350px;
+  align-items: flex-end;
+  /* align-self: baseline; */
+  /* position: fixed;
+  left: 100px; */
+}
+
 .draggableShip {
   background-color: blue;
   height: 29px;
   width: 29px;
+  margin: 5px;
+}
+
+.draggableShip[draggable='false'] {
+  opacity: 0.1;
 }

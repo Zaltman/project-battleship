@@ -24,12 +24,12 @@ function computerActionsFactory(playerArray) {
     //populating every ship on board
     placingAttempt(1, playerArray);
     placingAttempt(1, playerArray);
-    placingAttempt(2, playerArray);
-    placingAttempt(2, playerArray);
-    placingAttempt(3, playerArray);
-    placingAttempt(3, playerArray);
-    placingAttempt(4, playerArray);
-    placingAttempt(5, playerArray);
+    // placingAttempt(2, playerArray);
+    // placingAttempt(2, playerArray);
+    // placingAttempt(3, playerArray);
+    // placingAttempt(3, playerArray);
+    // placingAttempt(4, playerArray);
+    // placingAttempt(5, playerArray);
   }
 
   function randomShot(targetPlayerArray) {
