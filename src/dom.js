@@ -40,6 +40,13 @@ function domFactory() {
       }
     }
   }
+  function isAllShipsPlaced() {
+    let shipsContainer = document.querySelector('.shipsContainer');
+    if (shipsContainer.hasChildNodes() == false) {
+      return true;
+    } else return false;
+  }
+
   function dragableShipsStack() {
     let squares = document.querySelectorAll('.boardSquare.player1');
     let shipsContainer = document.createElement('div');
@@ -65,7 +72,6 @@ function domFactory() {
     function handleDragStart(e) {
       let draggedShip = this.dataset.dragableShip;
       e.dataTransfer.setData('draggedShipId', draggedShip);
-      console.log(this.classList.value);
       let shipSize = e.target.dataset.size;
       e.dataTransfer.setData('size', shipSize);
 
@@ -73,7 +79,10 @@ function domFactory() {
         e.dataTransfer.setData('direction', 'h');
       } else if (this.classList.value.includes('vertical')) {
         e.dataTransfer.setData('direction', 'v');
-      } else alert('error dom handleDragStart function');
+      } else {
+        e.preventDefault();
+        return;
+      }
       let dragShipId = e.target.dataset.dragableShip;
       this.style.opacity = '0.4';
       e.dataTransfer.setData('text/html', dragShipId);
@@ -106,14 +115,6 @@ function domFactory() {
       let dragableShipId = e.dataTransfer.getData('text/html');
       let placingDirection = e.dataTransfer.getData('direction');
       let shipSize = parseInt(e.dataTransfer.getData('size'));
-      console.log(
-        gameBoard.ablePlaceShipCheck(
-          shipSize,
-          squareCoords,
-          placingDirection,
-          squaresObj.p1SquaresArray
-        )
-      );
       if (
         gameBoard.ablePlaceShipCheck(
           shipSize,
@@ -133,38 +134,51 @@ function domFactory() {
         let draggedShip = document.querySelector(
           `[data-dragable-ship="${dragableShipId}"]`
         );
-        // console.log('ai');
         let shipToRemove = e.dataTransfer.getData('draggedShipId');
-        console.log(shipToRemove);
         shipToRemove = document.querySelector(
           `[data-dragable-ship="${shipToRemove}"]`
         );
         shipToRemove.remove();
         e.preventDefault();
+        if (isAllShipsPlaced()) {
+          changeGameStateStr('Placing is finished, player1, take a shot');
+        }
         draggedShip.style.opacity = '0.1';
-        // draggedShip.setAttribute('draggable', 'false');
-        // console.log(draggedShip);
       }
       return false;
     }
     function changeDirection() {
-      let ship = document.querySelector('.draggableShip');
-      let shipSize = ship.dataset.size;
-      let direction = document.querySelector('#directionBtn').textContent;
-      console.log(directionBtn.textContent);
+      let ships = document.querySelectorAll('.draggableShip');
+      changeDirectionChar();
+      function changeDirectionChar() {
+        let currentDirectionEl = document.querySelector('#directionBtn');
 
-      if ((direction = '→')) {
-        ship.style.width = String(shipSize) + 'px';
-        ship.style.height = '29px';
-      } else if ((direction = '↓')) {
-        ship.style.width = String(shipSize) + 'px';
-        ship.style.height = '29px';
+        if (currentDirectionEl.textContent == '→') {
+          currentDirectionEl.textContent = '↓';
+        } else currentDirectionEl.textContent = '→';
       }
-      console.log('ain');
+      let direction = String(
+        document.querySelector('#directionBtn').textContent
+      );
+
+      ships.forEach(function (ship) {
+        let shipSize = ship.dataset.size;
+        if (direction == '→') {
+          ship.classList.remove('vertical');
+          ship.classList.add('horizontal');
+          ship.style.width = String(shipSize * 29) + 'px';
+          ship.style.height = '29px';
+        } else if (direction == '↓') {
+          ship.classList.remove('horizontal');
+          ship.classList.add('vertical');
+
+          ship.style.width = '29px';
+          ship.style.height = String(shipSize * 29) + 'px';
+        }
+      });
     }
     squares.forEach(function (item) {
       if (item.classList[0] !== 'boardSquare') {
-        // console.log(item.classList[0]);
       }
       item.addEventListener('drop', handleDrop);
       item.addEventListener('dragstart', handleDragStart);
@@ -195,16 +209,8 @@ function domFactory() {
     renderShips,
     changeGameStateStr,
     dragableShipsStack,
+    isAllShipsPlaced,
   };
 }
 
 export { domFactory };
-
-// placingAttempt(1, playerArray);
-// placingAttempt(1, playerArray);
-// placingAttempt(2, playerArray);
-// placingAttempt(2, playerArray);
-// placingAttempt(3, playerArray);
-// placingAttempt(3, playerArray);
-// placingAttempt(4, playerArray);
-// placingAttempt(5, playerArray);

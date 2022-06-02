@@ -67,6 +67,12 @@ function gameBoardFactory() {
   };
   //includes gamestate text changing
   function eListenerTakeShotInteraction(e) {
+    if (!domController.isAllShipsPlaced()) {
+      return domController.changeGameStateStr(
+        'Player1, finish placing your ships'
+      );
+    }
+
     if (isGameOver()) {
       return alert('game over');
     }
@@ -176,7 +182,6 @@ function gameBoardFactory() {
     } else alert('something wrong with placeShip function');
   };
   let receiveAttack = function (coord, playerArray) {
-    // console.log(playerArray);
     if (
       playerArray[coord] &&
       playerArray[coord] !== 'missed shot' &&
@@ -187,7 +192,6 @@ function gameBoardFactory() {
     ) {
       let hitIndex = playerArray[coord].shipSquareHitIndex;
       playerArray[coord].ship.hit(hitIndex);
-      // console.log(playerIndex);
     } else if (!playerArray[coord]) {
       playerArray[coord] = 'missed shot';
       //if unable to shoot, return false

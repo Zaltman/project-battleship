@@ -17,17 +17,16 @@ gameBoard.createBoard();
 domController.dragableShipsStack();
 domController.addGameStateContainer();
 function gameLoop() {
-  AiController.populateShips(squaresObj.p1SquaresArray);
+  // AiController.populateShips(squaresObj.p1SquaresArray);
   AiController.populateShips(squaresObj.p2SquaresArray);
   domController.renderShips(squaresObj.p1SquaresArray, 1);
-  domController.changeGameStateStr('Player1, take a shot on second board');
+  domController.changeGameStateStr(
+    'Player1, place your ships on the gameboard'
+  );
   domController.renderShips(squaresObj.p2SquaresArray, 2);
 }
 gameLoop();
-// AiController.populateShips(squaresObj.p2SquaresArray);
-// domController.renderShips(squaresObj.p2SquaresArray, 2);
 
-// shoots own ships for testing
 console.log(squaresObj.p1SquaresArray);
 
 export { gameBoard, squaresObj, AiController, domController };
