@@ -10,6 +10,10 @@ function domFactory() {
     body.appendChild(gameStateContainer);
   }
   function changeGameStateStr(str) {
+    gameStateContainer.classList.remove('shake');
+    gameStateContainer.offsetWidth;
+    gameStateContainer.classList.add('shake');
+
     gameStateContainer.textContent = str;
   }
   function renderShips(playerArray, whichBoard) {
@@ -51,6 +55,7 @@ function domFactory() {
     let squares = document.querySelectorAll('.boardSquare.player1');
     let shipsContainer = document.createElement('div');
     let body = document.querySelector('body');
+    let topContainer = document.querySelector('#topContainer');
     shipsContainer.classList.add('shipsContainer');
 
     function addDragableShip(id, size) {
@@ -66,7 +71,6 @@ function domFactory() {
       ship.style.width = String(widthOrHeight) + 'px';
       ship.style.height = '29px';
 
-      // ship.style.width = String(widthOrHeight) + 'px';
       shipsContainer.appendChild(ship);
     }
     function handleDragStart(e) {
@@ -142,6 +146,8 @@ function domFactory() {
         e.preventDefault();
         if (isAllShipsPlaced()) {
           changeGameStateStr('Placing is finished, player1, take a shot');
+          let directionBtn = document.querySelector('#directionBtn');
+          directionBtn.remove();
         }
         draggedShip.style.opacity = '0.1';
       }
@@ -193,8 +199,8 @@ function domFactory() {
     directionBtn.setAttribute('id', 'directionBtn');
     directionBtn.addEventListener('click', changeDirection);
 
-    body.prepend(directionBtn);
-    body.prepend(shipsContainer);
+    topContainer.prepend(directionBtn);
+    topContainer.prepend(shipsContainer);
     addDragableShip(1, 1);
     addDragableShip(2, 1);
     addDragableShip(3, 2);

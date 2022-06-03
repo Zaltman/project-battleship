@@ -17,23 +17,40 @@ body {
   align-items: center;
   flex-grow: 1;
 }
+#topContainer {
+  display: flex;
+  width: 712px;
+}
+.shipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 320px;
+  height: 167px;
+}
+
+.draggableShip {
+  background-color: blue;
+  height: 29px;
+  width: 29px;
+  margin: 5px;
+  cursor: grabbing;
+}
+
+.draggableShip[draggable='false'] {
+  opacity: 0.1;
+}
 #gameState {
 }
 
 #boardContainer {
   display: flex;
-  /* justify-content: flex-end; */
-  /* align-items: flex-end; */
-  /* width: 330px; */
-  /* height: 330px; */
+  order: 1;
   flex-wrap: wrap;
 }
 
 #p1Container,
 #p2Container {
   display: flex;
-  /* justify-content: flex-end; */
-  /* align-items: flex-end; */
   width: 330px;
   height: 330px;
   margin: 50px;
@@ -41,12 +58,10 @@ body {
   flex-wrap: wrap;
   box-shadow: 1px 1px 0px 0px black;
 }
-
 .coordinateRow {
   display: flex;
   height: 30px;
   width: 300px;
-  /* border: solid 1px black; */
   border-bottom: 0px;
   flex-grow: 1;
 }
@@ -58,8 +73,6 @@ body {
   align-items: center;
   border-left: solid 1px black;
   border-top: 0px;
-  /* margin-left: 1px; */
-  /* padding-left: -1; */
 }
 
 .coordinateSquareColumn {
@@ -83,7 +96,6 @@ body {
   border-bottom: 0px;
 }
 .squaresContainer {
-  /* box-sizing: content-box; */
   display: flex;
   position: absolute;
   margin-top: 30px;
@@ -91,25 +103,21 @@ body {
   width: 300px;
   height: 300px;
   flex-wrap: wrap;
-  /* border: solid 2px black; */
 }
 
 .boardSquare {
   width: 10%;
   height: 10%;
-  /* flex-grow: 1; */
   border-top: solid 1px black;
   border-left: solid 1px black;
 }
 .player2:hover {
-  /* background-blend-mode: lighten, black; */
   cursor: crosshair;
   background-color: grey;
 }
 
 .shipSquare {
   background-color: blue;
-  /* border-left: solid 2px blue; */
 }
 .boardSquare.over {
   border: 3px dotted #666;
@@ -141,32 +149,35 @@ body {
 
 #directionBtn {
   background-color: lightblue;
+  align-self: center;
   border-radius: 5px;
   height: 40px;
   width: 40px;
   font-size: xx-large;
+  cursor: pointer;
 }
 
-.shipsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  width: 860px;
-  margin-right: 150px;
-  padding-left: 150px;
-  padding-right: 350px;
-  align-items: flex-end;
-  /* align-self: baseline; */
-  /* position: fixed;
-  left: 100px; */
+.shake {
+  animation: shake 0.1s;
 }
 
-.draggableShip {
-  background-color: blue;
-  height: 29px;
-  width: 29px;
-  margin: 5px;
-}
-
-.draggableShip[draggable='false'] {
-  opacity: 0.1;
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
 }

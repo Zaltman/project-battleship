@@ -6,6 +6,9 @@ import { domController } from '.';
 function gameBoardFactory() {
   let boardContainer = document.createElement('div');
   let body = document.querySelector('body');
+  let topContainer = document.createElement('div');
+  topContainer.setAttribute('id', 'topContainer');
+  body.appendChild(topContainer);
 
   boardContainer.setAttribute('id', 'boardContainer');
   body.appendChild(boardContainer);
@@ -81,7 +84,6 @@ function gameBoardFactory() {
       e.target.classList.value.includes('shotSquare')
     ) {
       return domController.changeGameStateStr('Already shot there');
-      // alert('already shot there');
     }
     let squareIndex = e.target.getAttribute('squareindex');
     let playerIndex = e.target.classList[1];
